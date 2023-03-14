@@ -10,6 +10,10 @@ class Role extends Model
 {
     use HasFactory;
 
+    const IS_ADMIN = 1;
+
+    protected $fillable = ['name'];
+
     public function permissions(): BelongsToMany
     {
         return $this->belongsToMany(Permission::class);
