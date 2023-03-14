@@ -2,9 +2,9 @@
 
 namespace App\Filament\Resources;
 
-use App\Filament\Resources\PermisionResource\Pages;
-use App\Filament\Resources\PermisionResource\RelationManagers;
-use App\Models\Permision;
+use App\Filament\Resources\PermissionResource\Pages;
+use App\Filament\Resources\PermissionResource\RelationManagers;
+use App\Models\Permission;
 use Filament\Forms;
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
@@ -13,9 +13,9 @@ use Filament\Tables;
 use Illuminate\Database\Eloquent\Builder;
 use Illuminate\Database\Eloquent\SoftDeletingScope;
 
-class PermisionResource extends Resource
+class PermissionResource extends Resource
 {
-    protected static ?string $model = Permision::class;
+    protected static ?string $model = Permission::class;
 
     protected static ?string $navigationIcon = 'heroicon-o-collection';
 
@@ -23,7 +23,11 @@ class PermisionResource extends Resource
     {
         return $form
             ->schema([
-                //
+                Forms\Components\TextInput::make('name')
+                    ->label('Nome')
+                    ->rule('min:3')
+                    ->validationAttribute('nome')
+                    ->required(),
             ]);
     }
 
@@ -43,20 +47,20 @@ class PermisionResource extends Resource
                 Tables\Actions\DeleteBulkAction::make(),
             ]);
     }
-    
+
     public static function getRelations(): array
     {
         return [
             //
         ];
     }
-    
+
     public static function getPages(): array
     {
         return [
-            'index' => Pages\ListPermisions::route('/'),
-            'create' => Pages\CreatePermision::route('/create'),
-            'edit' => Pages\EditPermision::route('/{record}/edit'),
+            'index' => Pages\ListPermissions::route('/'),
+            'create' => Pages\CreatePermission::route('/create'),
+            'edit' => Pages\EditPermission::route('/{record}/edit'),
         ];
-    }    
+    }
 }
