@@ -4,8 +4,16 @@ namespace App\Filament\Resources;
 
 use App\Filament\Resources\RoleResource\Pages;
 //use App\Filament\Resources\RoleResource\RelationManagers;
+use App\Filament\Resources\RoleResource\RelationManagers\PermissionsRelationManager;
 use App\Models\Role;
 use Filament\Forms;
+use Filament\Forms\Components\Card;
+use Filament\Tables\Actions\DeleteAction;
+use Filament\Tables\Actions\EditAction;
+use Filament\Forms\Components\{
+    TextInput,
+    Select
+};
 use Filament\Resources\Form;
 use Filament\Resources\Resource;
 use Filament\Resources\Table;
@@ -18,26 +26,44 @@ class RoleResource extends Resource
 {
     protected static ?string $model = Role::class;
 
-    protected static ?string $navigationIcon = 'heroicon-o-collection';
+    protected static ?string $navigationIcon = 'heroicon-s-cog';
+
+    protected static ?string $navigationGroup = 'Admin Management';
 
     public static function form(Form $form): Form
     {
         return $form
             ->schema([
-                Forms\Components\TextInput::make('name')
-                    ->label('Nome')
-                    ->rule('min:3')
-                    ->validationAttribute('nome')
-                    ->required(),
+                Card::make()
+                    ->schema([
+                        TextInput::make('name')
+                            ->label('Nome')
+                            ->rule('min:3')
+                            ->validationAttribute('nome')
+                            ->unique(ignoreRecord: true)
+                            ->required(),
+                        Select::make('permissions')
+                            ->relationship('permissions', 'name')
+                            ->multiple()
+                            ->preload()
+                            ->required()
+                    ])
             ]);
+
     }
 
     public static function table(Table $table): Table
     {
         return $table
             ->columns([
+                TextColumn::make('id')
+                    ->label('#')
+                    ->sortable()
+                    ->searchable(),
                 TextColumn::make('name')
-                    ->label('Role'),
+                    ->label('Permissão')
+                    ->sortable()
+                    ->searchable(),
                 TextColumn::make('created_at')
                     ->label('Criado em')
                     ->date('d/m/Y'),
@@ -46,7 +72,8 @@ class RoleResource extends Resource
                 //
             ])
             ->actions([
-                Tables\Actions\EditAction::make(),
+                EditAction::make(),
+                DeleteAction::make()
             ])
             ->bulkActions([
                 Tables\Actions\DeleteBulkAction::make(),
@@ -56,6 +83,7 @@ class RoleResource extends Resource
     public static function getRelations(): array
     {
         return [
+            PermissionsRelationManager::class,
         ];
     }
 

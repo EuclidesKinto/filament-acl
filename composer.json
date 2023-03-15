@@ -13,6 +13,7 @@
         "laravel/tinker": "^2.8.1"
     },
     "require-dev": {
+        "doctrine/dbal": "^3.6",
         "fakerphp/faker": "^1.21.0",
         "laravel/pint": "^1.6.0",
         "laravel/sail": "^1.21.2",
