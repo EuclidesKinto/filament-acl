@@ -5,17 +5,20 @@ namespace App\Policies;
 use App\Models\Permission;
 use App\Models\Role;
 use App\Models\User;
+use Illuminate\Auth\Access\HandlesAuthorization;
 use Illuminate\Auth\Access\Response;
 use Illuminate\Support\Facades\Gate;
 
 class PermissionPolicy
 {
+    use HandlesAuthorization;
     /**
      * Determine whether the user can view any models.
      */
     public function viewAny(User $user): bool
     {
-        return true;
+        $model = ['permission-read'];
+        return $user->hasPermission($model, $user);
     }
 
     /**
@@ -23,7 +26,8 @@ class PermissionPolicy
      */
     public function view(User $user, Permission $permission): bool
     {
-        //
+        $model = ['permission-delete'];
+        return $user->hasPermission($model, $user);
     }
 
     /**
@@ -31,7 +35,8 @@ class PermissionPolicy
      */
     public function create(User $user): bool
     {
-        //
+         $model = ['permission-delete'];
+        return $user->hasPermission($model, $user);
     }
 
     /**
@@ -39,7 +44,8 @@ class PermissionPolicy
      */
     public function update(User $user, Permission $permission): bool
     {
-        //
+         $model = ['permission-delete'];
+        return $user->hasPermission($model, $user);
     }
 
     /**
@@ -47,7 +53,8 @@ class PermissionPolicy
      */
     public function delete(User $user, Permission $permission): bool
     {
-        //
+         $model = ['permission-delete'];
+        return $user->hasPermission($model, $user);
     }
 
     /**
@@ -55,7 +62,8 @@ class PermissionPolicy
      */
     public function restore(User $user, Permission $permission): bool
     {
-        //
+         $model = ['permission-delete'];
+        return $user->hasPermission($model, $user);
     }
 
     /**
@@ -63,6 +71,7 @@ class PermissionPolicy
      */
     public function forceDelete(User $user, Permission $permission): bool
     {
-        //
+         $model = ['permission-delete'];
+        return $user->hasPermission($model, $user);
     }
 }

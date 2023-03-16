@@ -47,14 +47,47 @@ class User extends Authenticatable implements FilamentUser
         'email_verified_at' => 'datetime',
     ];
 
-    public function role(): BelongsTo
+    public function roles(): BelongsToMany
     {
-        return $this->belongsTo(Role::class);
+        return $this->belongsToMany(Role::class);
+    }
+
+    public function hasRole($role)
+    {
+//        dd('ok');
+        if (is_string($role)) {
+//            dd($this->roles->contains('name', $role));
+            return $this->roles->contains('name', $role);
+        }
+
+        return !! $role->intersect($this->roles)->count();
+    }
+
+    public function hasPermission($permissions, $user): bool
+    {
+        if (is_array($permissions)) {
+            foreach ($permissions as $permission) {
+                foreach ($user->roles as $role) {
+                    if ($role->permissions->contains('name', $permission)) {
+                        return true;
+                    }
+                }
+            }
+            return false;
+        }
+
+        foreach ($user->roles as $role) {
+            if ($role->permissions->contains('name', $permissions)) {
+                return true;
+            }
+        }
+
+        return false;
     }
 
     public function canAccessFilament(): bool
     {
-        return true;
-//        return str_ends_with($this->email, 'admin@admin.com');
+        return $this->is_admin;
     }
+
 }

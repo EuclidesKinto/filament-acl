@@ -13,7 +13,6 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->boolean('is_admin')->after('name')->default(0);
-            $table->foreignId('role_id')->after('is_admin')->constrained('roles')->cascadeOnDelete();
         });
     }
 
@@ -24,7 +23,6 @@ return new class extends Migration
     {
         Schema::table('users', function (Blueprint $table) {
             $table->dropColumn('is_admin');
-            $table->dropConstrainedForeignId('role_id');
         });
     }
 };
